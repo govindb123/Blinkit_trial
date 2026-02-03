@@ -1,0 +1,55 @@
+<div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 20px;">
+  <div style="background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 30px; margin: 20px 0;">
+    <h2 style="color: #007bff; margin-bottom: 30px;">🚴 Rider Dashboard</h2>
+    
+    <h3 style="color: #dc3545; margin: 20px 0;">📦 Pending Deliveries</h3>
+    <% if @pending_orders.any? %>
+      <% @pending_orders.each do |order| %>
+        <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="flex: 1; min-width: 200px;">
+              <div style="font-weight: bold; color: #007bff; margin-bottom: 5px;">
+                <%= link_to "Order ##{order.id}", delivery_path(order), style: "color: #007bff; text-decoration: none;" %>
+              </div>
+              <div style="color: #666; margin-bottom: 5px;">📍 <%= order.address %></div>
+              <div style="color: #333;">🛍️ <%= order.order_items.first&.item&.name %> - ₹<%= order.order_items.first&.item&.price %></div>
+            </div>
+            <div>
+              <%= button_to "✅ Mark Delivered", delivery_path(order), method: :put, style: "background-color: #28a745; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div style="background-color: #f8f9fa; border-radius: 8px; padding: 30px; margin: 15px 0; color: #666; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">📭</div>
+        <p style="font-size: 16px;">No pending deliveries</p>
+      </div>
+    <% end %>
+
+    <h3 style="color: #28a745; margin: 30px 0 20px 0;">✅ Completed Deliveries</h3>
+    <% if @delivered_orders.any? %>
+      <% @delivered_orders.each do |order| %>
+        <div style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div style="flex: 1;">
+              <div style="font-weight: bold; color: #007bff; margin-bottom: 5px;">
+                <%= link_to "Order ##{order.id}", delivery_path(order), style: "color: #007bff; text-decoration: none;" %>
+              </div>
+              <div style="color: #666; margin-bottom: 5px;">📍 <%= order.address %></div>
+              <div style="color: #333;">🛍️ <%= order.order_items.first&.item&.name %> - ₹<%= order.order_items.first&.item&.price %></div>
+            </div>
+            <div style="color: #28a745; font-weight: bold; font-size: 18px;">
+              ✅ Delivered
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div style="background-color: #f8f9fa; border-radius: 8px; padding: 30px; margin: 15px 0; color: #666; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">📦</div>
+        <p style="font-size: 16px;">No completed deliveries yet</p>
+      </div>
+    <% end %>
+  </div>
+</div>
