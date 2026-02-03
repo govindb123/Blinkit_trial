@@ -1,56 +1,70 @@
-<div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 20px;">
-  <div style="background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 30px; margin: 20px 0;">
-    <h2 style="color: #007bff; margin-bottom: 30px;">Customer Dashboard</h2>
+<div class="orders-container">
+  <div class="orders-card">
+    <div class="dashboard-header">
+      <h2 class="orders-title">Customer Dashboard</h2>
+      <%= link_to "🏠 Home", root_path, class: "home-btn" %>
+    </div>
     
-    <h3 style="color: #333; margin: 20px 0;">Available Items</h3>
+    <h3 class="section-title">Available Items</h3>
 
   <% if notice %>
-    <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin: 10px 0;">
+    <div class="success-notice">
       <%= notice %>
     </div>
   <% end %>
 
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+  <div class="items-grid">
     <% colors = ['#ffebee', '#e8f5e8', '#e3f2fd', '#fff3e0', '#f3e5f5', '#e0f2f1'] %>
     <% @items.each_with_index do |item, index| %>
-      <div style="width: 250px; margin: 10px; padding: 15px; background-color: <%= colors[index % colors.length] %>; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center;">
-        <div style="margin-bottom: 10px; font-weight: bold;"><%= item.name %></div>
-        <div style="margin-bottom: 15px; color: #28a745; font-size: 18px;">₹<%= item.price %></div>
+      <div class="item-card" style="background-color: <%= colors[index % colors.length] %>;">
+        <div class="item-name"><%= item.name %></div>
+        <div class="item-price">₹<%= item.price %></div>
         <%= form_with url: orders_path, local: true do |f| %>
           <%= f.hidden_field :item_id, value: item.id %>
-          <%= f.text_field :address, placeholder: "Enter delivery address", required: true, style: "width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;" %>
-          <%= f.submit "Buy", style: "background-color: #007bff; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; width: 100%;" %>
+          <%= f.text_field :address, placeholder: "Enter delivery address", required: true, class: "address-input" %>
+          <%= f.submit "Buy", class: "buy-btn" %>
         <% end %>
       </div>
      <% end %>
   </div>
 
-  <h3 style="color: #dc3545; margin: 30px 0 20px 0;">Pending Orders</h3>
-  <% if Order.where(status: "pending").any? %>
-    <% Order.where(status: "pending").last(5).each do |order| %>
-      <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 10px 0; border-radius: 8px;">
-        <%= link_to "Order ##{order.id} - #{order.order_items.first&.item&.name}", order_path(order), style: "color: #007bff; text-decoration: none; font-weight: bold;" %>
-        <span style="color: #856404; font-weight: bold; margin-left: 10px;">⏳ Pending</span>
-      </div>
-    <% end %>
-  <% else %>
-    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 10px 0; color: #666;">
-      <p>No pending orders</p>
+  <!-- Orders Side by Side Layout -->
+  <div class="orders-columns">
+    
+    <!-- Left Column: Pending Orders -->
+    <div class="orders-column">
+      <h3 class="pending-title">Pending Orders</h3>
+      <% if Order.where(status: "pending").any? %>
+        <% Order.where(status: "pending").last(5).each do |order| %>
+          <div class="order-item pending-order">
+            <%= link_to "Order ##{order.id} - #{order.order_items.first&.item&.name}", order_path(order), class: "order-link" %>
+            <span class="order-status pending-status">⏳ Pending</span>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="empty-orders">
+          <p>No pending orders</p>
+        </div>
+      <% end %>
     </div>
-  <% end %>
 
-  <h3 style="color: #28a745; margin: 30px 0 20px 0;">Delivered Orders</h3>
-  <% if Order.where(status: "delivered").any? %>
-    <% Order.where(status: "delivered").last(5).each do |order| %>
-      <div style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 10px 0; border-radius: 8px;">
-        <%= link_to "Order ##{order.id} - #{order.order_items.first&.item&.name}", order_path(order), style: "color: #007bff; text-decoration: none; font-weight: bold;" %>
-        <span style="color: #28a745; font-weight: bold; margin-left: 10px;">✓ Delivered</span>
-      </div>
-    <% end %>
-  <% else %>
-    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 10px 0; color: #666;">
-      <p>No delivered orders yet</p>
+    <!-- Right Column: Delivered Orders -->
+    <div class="orders-column">
+      <h3 class="delivered-title">Delivered Orders</h3>
+      <% if Order.where(status: "delivered").any? %>
+        <% Order.where(status: "delivered").last(5).each do |order| %>
+          <div class="order-item delivered-order">
+            <%= link_to "Order ##{order.id} - #{order.order_items.first&.item&.name}", order_path(order), class: "order-link" %>
+            <span class="order-status delivered-status">✓ Delivered</span>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="empty-orders">
+          <p>No delivered orders yet</p>
+        </div>
+      <% end %>
     </div>
-  <% end %>
+    
+  </div>
   </div>
 </div>

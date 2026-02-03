@@ -1,0 +1,235 @@
+/* Deliveries Dashboard Styles */
+.deliveries-container {
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.deliveries-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  padding: 30px;
+  margin: 20px 0;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.home-btn {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.deliveries-title {
+  color: #007bff;
+  margin-bottom: 0;
+}
+
+.deliveries-columns {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.deliveries-column {
+  flex: 1;
+  min-width: 300px;
+}
+
+.column-title {
+  margin: 20px 0;
+}
+
+.available-title { color: #dc3545; }
+.assigned-title { color: #ffc107; }
+.completed-title { color: #28a745; }
+
+/* Order Cards */
+.order-card {
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 12px;
+  position: relative;
+}
+
+.available-card {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 2px solid #ffc107;
+  box-shadow: 0 4px 8px rgba(255,193,7,0.3);
+  overflow: hidden;
+}
+
+.assigned-card {
+  background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+  border: 2px solid #007bff;
+  box-shadow: 0 4px 8px rgba(0,123,255,0.2);
+}
+
+.completed-card {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border: 2px solid #28a745;
+  box-shadow: 0 4px 8px rgba(40,167,69,0.2);
+}
+
+/* Badges */
+.new-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #dc3545;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: bold;
+  transform: rotate(15deg);
+}
+
+.status-badge {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: bold;
+}
+
+.assigned-badge { background-color: #ffc107; }
+.delivery-badge { background-color: #007bff; }
+.done-badge { background-color: #28a745; }
+
+/* Order Content */
+.order-content {
+  margin-top: 15px;
+}
+
+.order-id {
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 8px;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.order-address {
+  color: #666;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.order-item {
+  color: #333;
+  margin-bottom: 8px;
+  padding: 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.available-item {
+  background-color: rgba(255,255,255,0.7);
+  margin-bottom: 10px;
+}
+
+.assigned-item {
+  background-color: rgba(255,255,255,0.8);
+}
+
+.completed-item {
+  background-color: rgba(255,255,255,0.8);
+}
+
+.item-price {
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Buttons */
+.btn-assign {
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  font-size: 12px;
+}
+
+.btn-start {
+  background: linear-gradient(45deg, #ffc107, #ffb300);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  font-size: 12px;
+}
+
+.btn-deliver {
+  background: linear-gradient(45deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  font-size: 12px;
+}
+
+/* Empty States */
+.empty-state {
+  border-radius: 12px;
+  padding: 30px;
+  color: #666;
+  text-align: center;
+  border: 2px dashed;
+}
+
+.empty-available {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-color: #dee2e6;
+}
+
+.empty-assigned {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border-color: #ff9800;
+}
+
+.empty-completed {
+  background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+  border-color: #28a745;
+}
+
+.empty-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.empty-text {
+  font-size: 14px;
+  margin: 0;
+}
+
+.completed-checkmark {
+  text-align: center;
+  margin-top: 10px;
+  color: #28a745;
+  font-size: 20px;
+}

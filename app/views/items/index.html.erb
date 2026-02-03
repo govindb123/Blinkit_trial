@@ -1,32 +1,35 @@
-<div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 20px;">
-  <div style="background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 30px; margin: 20px 0;">
-    <h2 style="color: #007bff; margin-bottom: 30px;">Seller Dashboard</h2>
+<div class="items-container">
+  <div class="items-card">
+    <div class="dashboard-header">
+      <h2 class="items-title">Seller Dashboard</h2>
+      <%= link_to "🏠 Home", root_path, class: "home-btn" %>
+    </div>
     
     <% if notice %>
-      <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+      <div class="success-notice">
         <%= notice %>
       </div>
     <% end %>
     
     <div style="margin-bottom: 30px;">
-      <%= link_to "Add New Item", new_item_path, style: "background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;" %>
+      <%= link_to "Add New Item", new_item_path, class: "add-item-btn" %>
     </div>
 
-    <h3 style="color: #333; margin: 20px 0;">Your Items:</h3>
+    <h3 class="section-title">Your Items:</h3>
     
     <% if @items.any? %>
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+      <div class="items-grid">
         <% colors = ['#ffebee', '#e8f5e8', '#e3f2fd', '#fff3e0', '#f3e5f5', '#e0f2f1'] %>
         <% @items.each_with_index do |item, index| %>
-          <div style="width: 200px; padding: 20px; background-color: <%= colors[index % colors.length] %>; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <div style="font-weight: bold; margin-bottom: 10px; color: #333;"><%= item.name %></div>
-            <div style="color: #28a745; font-size: 18px; font-weight: bold;">₹<%= item.price %></div>
+          <div class="item-card" style="background-color: <%= colors[index % colors.length] %>;">
+            <div class="item-name"><%= item.name %></div>
+            <div class="item-price">₹<%= item.price %></div>
           </div>
         <% end %>
       </div>
     <% else %>
-      <div style="background-color: #f8f9fa; border-radius: 8px; padding: 30px; margin: 20px 0; color: #666;">
-        <p style="font-size: 16px;">No items added yet. Click "Add New Item" to get started!</p>
+      <div class="empty-items">
+        <p>No items added yet. Click "Add New Item" to get started!</p>
       </div>
     <% end %>
   </div>

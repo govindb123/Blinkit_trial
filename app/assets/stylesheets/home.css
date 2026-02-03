@@ -1,0 +1,35 @@
+/* Home Page Styles */
+.home-container {
+  text-align: center;
+}
+
+.home-title {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.home-subtitle {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.role-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.role-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.role-btn:hover {
+  background-color: #0056b3;
+}
