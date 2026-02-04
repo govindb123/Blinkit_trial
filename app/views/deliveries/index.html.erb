@@ -19,7 +19,8 @@
                 <%= link_to "Order ##{order.id}", delivery_path(order), class: "order-id" %>
               </div>
               <div class="order-address">📍 <%= order.address %></div>
-              <div class="order-item available-item">🛍️ <%= order.order_items.first&.item&.name %> - <span class="item-price">₹<%= order.order_items.first&.item&.price %></span></div>
+              <div class="order-item available-item">🛍️ <%= order.order_items.first&.item&.name %> (Qty: <%= order.order_items.first&.quantity %>) - <span class="item-price">₹<%= order.order_items.first&.item&.price %></span></div>
+              <div class="order-total">Total: ₹<%= order.order_items.sum { |oi| oi.quantity * oi.item.price } %></div>
               <%= form_with url: assign_delivery_path(order), method: :patch, local: true do |f| %>
                 <%= f.submit "🚀 Assign", class: "btn-assign" %>
               <% end %>
@@ -39,16 +40,23 @@
         <% if @my_assigned_orders.any? %>
           <% @my_assigned_orders.each do |order| %>
             <div class="order-card assigned-card">
-              <div class="status-badge <%= order.status == 'assigned' ? 'assigned-badge' : 'delivery-badge' %>"><%= order.status == 'assigned' ? '📋 ASSIGNED' : '🚚 OUT FOR DELIVERY' %></div>
+              <div class="status-badge"><%= order.status_display %></div>
               <div class="order-content">
                 <div class="order-id">
                   <%= link_to "Order ##{order.id}", delivery_path(order), class: "order-id" %>
                 </div>
                 <div class="order-address">📍 <%= order.address %></div>
-                <div class="order-item assigned-item">🛍️ <%= order.order_items.first&.item&.name %> - <span class="item-price">₹<%= order.order_items.first&.item&.price %></span></div>
-                <% if order.status == "assigned" %>
-                  <%= button_to "🚀 Start", start_delivery_delivery_path(order), method: :patch, class: "btn-start" %>
-                <% elsif order.status == "out_for_delivery" %>
+                <div class="order-item assigned-item">🛍️ <%= order.order_items.first&.item&.name %> (Qty: <%= order.order_items.first&.quantity %>) - <span class="item-price">₹<%= order.order_items.first&.item&.price %></span></div>
+                <div class="order-total">Total: ₹<%= order.order_items.sum { |oi| oi.quantity * oi.item.price } %></div>
+                
+                <% case order.status %>
+                <% when "assigned" %>
+                  <%= button_to "📦 Pick Up", pickup_delivery_path(order), method: :patch, class: "btn-pickup" %>
+                <% when "picked_up" %>
+                  <%= button_to "🚀 Start Delivery", start_delivery_delivery_path(order), method: :patch, class: "btn-start" %>
+                <% when "in_transit" %>
+                  <%= button_to "📍 Nearby", nearby_delivery_path(order), method: :patch, class: "btn-nearby" %>
+                <% when "nearby" %>
                   <%= button_to "✅ Deliver", delivery_path(order), method: :put, class: "btn-deliver" %>
                 <% end %>
               </div>
@@ -75,6 +83,7 @@
                 </div>
                 <div class="order-address">📍 <%= order.address %></div>
                 <div class="order-item completed-item">🛍️ <%= order.order_items.first&.item&.name %> - <span class="item-price">₹<%= order.order_items.first&.item&.price %></span></div>
+                <div class="order-total">Total: ₹<%= order.order_items.sum { |oi| oi.quantity * oi.item.price } %></div>
                 <div class="completed-checkmark">✅</div>
               </div>
             </div>

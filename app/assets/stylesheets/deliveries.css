@@ -181,8 +181,20 @@
   font-size: 12px;
 }
 
-.btn-deliver {
+.btn-pickup {
   background: linear-gradient(45deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  font-size: 12px;
+}
+
+.btn-nearby {
+  background: linear-gradient(45deg, #17a2b8, #138496);
   color: white;
   border: none;
   padding: 8px 16px;
@@ -232,4 +244,12 @@
   margin-top: 10px;
   color: #28a745;
   font-size: 20px;
+}
+
+.order-total {
+  font-weight: bold;
+  color: #28a745;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: center;
 }

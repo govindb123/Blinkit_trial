@@ -2,9 +2,31 @@
   <h1 class="home-title">Blinkit Trial</h1>
   <p class="home-subtitle">Welcome to my Rails application</p>
 
-  <div class="role-buttons">
-    <a href="/items" class="role-btn">Seller</a>
-    <a href="/orders" class="role-btn">Customer</a>
-    <a href="/deliveries" class="role-btn">Rider</a>
-  </div>
+  <% if current_user %>
+    <div style="margin-bottom: 20px; padding: 15px; background-color: #d4edda; border-radius: 5px; color: #155724;">
+      Currently logged in as: <strong><%= current_user.role.capitalize %></strong>
+      <br><br>
+      <div style="text-align: center;">
+        <% case current_user.role %>
+        <% when 'customer' %>
+          <%= link_to "Continue as Customer", orders_path, 
+              style: "background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;" %>
+        <% when 'seller' %>
+          <%= link_to "Continue as Seller", items_path, 
+              style: "background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;" %>
+        <% when 'rider' %>
+          <%= link_to "Continue as Rider", deliveries_path, 
+              style: "background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;" %>
+        <% end %>
+        <%= link_to "Switch Role", root_path(clear_role: true), 
+            style: "background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;" %>
+      </div>
+    </div>
+  <% else %>
+    <div class="role-buttons">
+      <%= link_to "Seller", set_role_path(role: 'seller'), class: "role-btn" %>
+      <%= link_to "Customer", set_role_path(role: 'customer'), class: "role-btn" %>
+      <%= link_to "Rider", set_role_path(role: 'rider'), class: "role-btn" %>
+    </div>
+  <% end %>
 </div>

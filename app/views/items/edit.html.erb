@@ -1,6 +1,6 @@
 <div class="form-container">
   <div class="form-card">
-    <h2 class="form-title">Add New Item</h2>
+    <h2 class="form-title">Edit Item</h2>
     
     <% if @item.errors.any? %>
       <div class="error-notice">
@@ -28,7 +28,7 @@
       </div>
       
       <div>
-        <%= f.submit "Add Item", class: "form-submit" %>
+        <%= f.submit "Update Item", class: "form-submit" %>
       </div>
     <% end %>
     

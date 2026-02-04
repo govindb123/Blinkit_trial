@@ -10,13 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_03_181500) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_04_132000) do
+  create_table "categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "icon"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.string "name"
     t.integer "price"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "category_id"
+    t.index ["category_id"], name: "index_items_on_category_id"
     t.index ["user_id"], name: "index_items_on_user_id"
   end
 
@@ -35,6 +44,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_03_181500) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "address"
+    t.datetime "status_updated_at"
+    t.datetime "estimated_delivery_time"
+    t.text "delivery_notes"
   end
 
   create_table "users", force: :cascade do |t|
@@ -44,6 +56,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_03_181500) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "items", "categories"
   add_foreign_key "items", "users"
   add_foreign_key "order_items", "items"
   add_foreign_key "order_items", "orders"

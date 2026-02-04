@@ -11,19 +11,61 @@
       </div>
     <% end %>
     
-    <div style="margin-bottom: 30px;">
+    <div style="margin-bottom: 30px; display: flex; gap: 10px;">
+      <%= link_to "Add Category", new_category_path, class: "add-category-btn" %>
       <%= link_to "Add New Item", new_item_path, class: "add-item-btn" %>
+      <%= link_to "Manage Categories", categories_path, class: "manage-categories-btn" %>
     </div>
 
     <h3 class="section-title">Your Items:</h3>
     
     <% if @items.any? %>
-      <div class="items-grid">
-        <% colors = ['#ffebee', '#e8f5e8', '#e3f2fd', '#fff3e0', '#f3e5f5', '#e0f2f1'] %>
-        <% @items.each_with_index do |item, index| %>
-          <div class="item-card" style="background-color: <%= colors[index % colors.length] %>;">
-            <div class="item-name"><%= item.name %></div>
-            <div class="item-price">₹<%= item.price %></div>
+      <div class="categories-grid">
+        <% @categories.each do |category| %>
+          <% category_items = @items.select { |item| item.category == category } %>
+          <% if category_items.any? %>
+            <div class="category-card-small">
+              <div class="category-header-small">
+                <h5 class="category-title-small"><%= category.icon %> <%= category.name %></h5>
+                <span class="item-count-small"><%= category_items.count %></span>
+              </div>
+              <div class="items-list-small">
+                <% category_items.each do |item| %>
+                  <div class="item-row-small">
+                    <span class="item-name-small"><%= item.name %></span>
+                    <span class="item-price-small">₹<%= item.price %></span>
+                    <div class="item-actions-small">
+                      <%= link_to "✏️", edit_item_path(item), class: "edit-icon-small" %>
+                      <%= button_to "🗑️", item_path(item), method: :delete, 
+                          confirm: "Are you sure?", class: "delete-icon-small" %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+        
+        <% uncategorized_items = @items.select { |item| item.category.nil? } %>
+        <% if uncategorized_items.any? %>
+          <div class="category-card-small uncategorized-card-small">
+            <div class="category-header-small">
+              <h5 class="uncategorized-title-small">📋 Uncategorized</h5>
+              <span class="item-count-small"><%= uncategorized_items.count %></span>
+            </div>
+            <div class="items-list-small">
+              <% uncategorized_items.each do |item| %>
+                <div class="item-row-small">
+                  <span class="item-name-small"><%= item.name %></span>
+                  <span class="item-price-small">₹<%= item.price %></span>
+                  <div class="item-actions-small">
+                    <%= link_to "✏️", edit_item_path(item), class: "edit-icon-small" %>
+                    <%= button_to "🗑️", item_path(item), method: :delete, 
+                        confirm: "Are you sure?", class: "delete-icon-small" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
           </div>
         <% end %>
       </div>

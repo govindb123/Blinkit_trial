@@ -1,0 +1,40 @@
+<div class="items-container">
+  <div class="items-card">
+    <div class="dashboard-header">
+      <h2 class="items-title">📂 Manage Categories</h2>
+      <%= link_to "← Back to Items", items_path, class: "home-btn" %>
+    </div>
+    
+    <% if notice %>
+      <div class="success-notice">
+        <%= notice %>
+      </div>
+    <% end %>
+    
+    <div style="margin-bottom: 30px;">
+      <%= link_to "Add New Category", new_category_path, class: "add-item-btn" %>
+    </div>
+
+    <h3 class="section-title">Categories:</h3>
+    
+    <% if @categories.any? %>
+      <div class="items-grid">
+        <% colors = ['#ffebee', '#e8f5e8', '#e3f2fd', '#fff3e0', '#f3e5f5', '#e0f2f1'] %>
+        <% @categories.each_with_index do |category, index| %>
+          <div class="item-card" style="background-color: <%= colors[index % colors.length] %>;">
+            <div class="item-name"><%= category.icon %> <%= category.name %></div>
+            <div class="item-price"><%= category.items.count %> items</div>
+            <div class="item-actions">
+              <%= button_to "🗑️", category_path(category), method: :delete, 
+                  confirm: "Are you sure? This will remove the category from all items.", class: "delete-icon" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-items">
+        <p>No categories added yet. Click "Add New Category" to get started!</p>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -14,36 +14,94 @@
   <% end %>
 
   <div class="items-grid">
-    <% colors = ['#ffebee', '#e8f5e8', '#e3f2fd', '#fff3e0', '#f3e5f5', '#e0f2f1'] %>
-    <% @items.each_with_index do |item, index| %>
-      <div class="item-card" style="background-color: <%= colors[index % colors.length] %>;">
-        <div class="item-name"><%= item.name %></div>
-        <div class="item-price">₹<%= item.price %></div>
-        <%= form_with url: orders_path, local: true do |f| %>
-          <%= f.hidden_field :item_id, value: item.id %>
-          <%= f.text_field :address, placeholder: "Enter delivery address", required: true, class: "address-input" %>
-          <%= f.submit "Buy", class: "buy-btn" %>
-        <% end %>
+    <% if @items.any? %>
+      <% colors = ['#ffebee', '#e8f5e8', '#e3f2fd', '#fff3e0', '#f3e5f5', '#e0f2f1'] %>
+      <% @items.each_with_index do |item, index| %>
+        <div class="item-card" style="background-color: <%= colors[index % colors.length] %>;">
+          <div class="item-name"><%= item.name %></div>
+          <div class="item-price">₹<%= item.price %></div>
+          
+          <div class="item-cart-section" id="item-<%= item.id %>">
+            <button class="add-to-cart-btn" onclick="showQuantitySelector(<%= item.id %>)">Add to Cart</button>
+            
+            <div class="quantity-section" style="display: none;">
+              <div class="quantity-controls">
+                <button class="qty-btn" onclick="changeQuantity(<%= item.id %>, -1, <%= item.price %>)">-</button>
+                <span class="quantity" id="qty-<%= item.id %>">1</span>
+                <button class="qty-btn" onclick="changeQuantity(<%= item.id %>, 1, <%= item.price %>)">+</button>
+              </div>
+              <div class="total-amount" id="total-<%= item.id %>">
+                Total: ₹<span id="amount-<%= item.id %>"><%= item.price %></span>
+              </div>
+              
+              <%= form_with url: orders_path, local: true, class: "order-form" do |f| %>
+                <%= f.hidden_field :item_id, value: item.id %>
+                <%= f.hidden_field :quantity, value: 1, id: "quantity-input-#{item.id}" %>
+                <%= f.text_field :address, placeholder: "Enter delivery address", required: true, class: "address-input" %>
+                <%= f.submit "Order", class: "order-btn" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+       <% end %>
+    <% else %>
+      <div class="out-of-stock">
+        <h3 class="out-of-stock-title">📦 Out of Stock</h3>
+        <p class="out-of-stock-text">All items are currently out of stock. Please check back later!</p>
       </div>
-     <% end %>
+    <% end %>
   </div>
+
+  <script>
+    function showQuantitySelector(itemId) {
+      const itemSection = document.getElementById(`item-${itemId}`);
+      const addToCartBtn = itemSection.querySelector('.add-to-cart-btn');
+      const quantitySection = itemSection.querySelector('.quantity-section');
+      
+      addToCartBtn.style.display = 'none';
+      quantitySection.style.display = 'block';
+    }
+    
+    function changeQuantity(itemId, change, price) {
+      const quantitySpan = document.getElementById(`qty-${itemId}`);
+      const quantityInput = document.getElementById(`quantity-input-${itemId}`);
+      const amountSpan = document.getElementById(`amount-${itemId}`);
+      let currentQty = parseInt(quantitySpan.textContent);
+      
+      currentQty += change;
+      if (currentQty < 1) currentQty = 1;
+      
+      const totalAmount = currentQty * price;
+      
+      quantitySpan.textContent = currentQty;
+      quantityInput.value = currentQty;
+      amountSpan.textContent = totalAmount;
+    }
+  </script>
 
   <!-- Orders Side by Side Layout -->
   <div class="orders-columns">
     
-    <!-- Left Column: Pending Orders -->
+    <!-- Left Column: Active Orders -->
     <div class="orders-column">
-      <h3 class="pending-title">Pending Orders</h3>
-      <% if Order.where(status: "pending").any? %>
-        <% Order.where(status: "pending").last(5).each do |order| %>
+      <h3 class="pending-title">Active Orders</h3>
+      <% active_orders = Order.where(status: ["pending", "assigned", "picked_up", "in_transit", "nearby"]) %>
+      <% if active_orders.any? %>
+        <% active_orders.last(5).each do |order| %>
           <div class="order-item pending-order">
             <%= link_to "Order ##{order.id} - #{order.order_items.first&.item&.name}", order_path(order), class: "order-link" %>
-            <span class="order-status pending-status">⏳ Pending</span>
+            <div class="order-progress">
+              <span class="order-status pending-status"><%= order.status_display %></span>
+              <div class="mini-progress-bar">
+                <div class="mini-progress-fill" style="width: <%= order.progress_percentage %>%;"></div>
+              </div>
+              <span class="progress-text"><%= order.progress_percentage %>% Complete</span>
+            </div>
           </div>
         <% end %>
       <% else %>
         <div class="empty-orders">
-          <p>No pending orders</p>
+          <p>No active orders</p>
         </div>
       <% end %>
     </div>

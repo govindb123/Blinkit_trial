@@ -1,9 +1,9 @@
 class DeliveriesController < ApplicationController
-	before_action :ensure_rider_session
+	before_action :require_rider
 
 	def index
 		@available_orders = Order.where(status: "pending")
-		@my_assigned_orders = Order.where(status: ["assigned", "out_for_delivery"])
+		@my_assigned_orders = Order.where(status: ["assigned", "picked_up", "in_transit", "nearby"])
 		@delivered_orders = Order.where(status: "delivered")
 	end
 
@@ -24,15 +24,36 @@ class DeliveriesController < ApplicationController
 		end
 	end
 
+	def pickup
+		order = Order.find_by(id: params[:id])
+		return redirect_to deliveries_path, alert: "Order not found" unless order
+		
+		if order.status == "assigned" && order.update(status: "picked_up")
+			redirect_to deliveries_path, notice: "Order picked up"
+		else
+			redirect_to deliveries_path, alert: "Cannot pick up - order must be assigned first"
+		end
+	end
+
 	def start_delivery
 		order = Order.find_by(id: params[:id])
 		return redirect_to deliveries_path, alert: "Order not found" unless order
 		
-		# For demo purposes, allow any rider to start any assigned order
-		if order.status == "assigned" && order.update(status: "out_for_delivery")
+		if order.status == "picked_up" && order.update(status: "in_transit")
 			redirect_to deliveries_path, notice: "Delivery started"
 		else
-			redirect_to deliveries_path, alert: "Cannot start delivery - order must be assigned first"
+			redirect_to deliveries_path, alert: "Cannot start delivery - order must be picked up first"
+		end
+	end
+
+	def nearby
+		order = Order.find_by(id: params[:id])
+		return redirect_to deliveries_path, alert: "Order not found" unless order
+		
+		if order.status == "in_transit" && order.update(status: "nearby")
+			redirect_to deliveries_path, notice: "Marked as nearby"
+		else
+			redirect_to deliveries_path, alert: "Cannot mark nearby - order must be in transit first"
 		end
 	end
 
@@ -40,17 +61,10 @@ class DeliveriesController < ApplicationController
 		order = Order.find_by(id: params[:id])
 		return redirect_to deliveries_path, alert: "Order not found" unless order
 		
-		# For demo purposes, allow any rider to deliver any out_for_delivery order
-		if order.status == "out_for_delivery" && order.update(status: "delivered")
+		if order.status == "nearby" && order.update(status: "delivered")
 			redirect_to deliveries_path, notice: "Order marked as delivered"
 		else
-			redirect_to deliveries_path, alert: "Cannot deliver - order must be out for delivery first"
+			redirect_to deliveries_path, alert: "Cannot deliver - order must be nearby first"
 		end
-	end
-
-	private
-
-	def ensure_rider_session
-		session[:rider_id] ||= SecureRandom.hex(8)
 	end
 end

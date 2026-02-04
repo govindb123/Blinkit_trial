@@ -1,15 +1,38 @@
 <div class="order-details-container">
   <div class="order-details-card">
-    <h2 class="order-details-title">Order Details</h2>
+    <h2 class="order-details-title">📦 Order Tracking</h2>
 
     <div class="order-info">
       <p><strong>Order #<%= @order.id %></strong></p>
-      <p><strong>Status:</strong> <span class="<%= @order.status == 'pending' ? 'status-pending' : 'status-delivered' %>"><%= @order.status.capitalize %></span></p>
+      <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;"><%= @order.status_display %></span></p>
       <p><strong>Order Date:</strong> <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
       <p><strong>Delivery Address:</strong> <%= @order.address %></p>
+      <% if @order.estimated_delivery_time %>
+        <p><strong>ETA:</strong> <%= @order.estimated_delivery_time.strftime("%I:%M %p") %></p>
+      <% end %>
     </div>
 
-    <h3 class="items-section-title">Items Ordered:</h3>
+    <!-- Progress Tracker -->
+    <div class="progress-container">
+      <h3>Delivery Progress</h3>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: <%= @order.progress_percentage %>%;"></div>
+      </div>
+      
+      <div class="progress-steps">
+        <% @progress_steps.each_with_index do |step, index| %>
+          <div class="progress-step <%= 'completed' if @order.status == step[:status] || @order.progress_percentage > (index * 16.67) %>">
+            <div class="step-icon"><%= step[:icon] %></div>
+            <div class="step-label"><%= step[:label] %></div>
+            <% if @order.status == step[:status] && @order.status_updated_at %>
+              <div class="step-time"><%= @order.status_updated_at.strftime("%I:%M %p") %></div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <h3 class="items-section-title">🛍️ Items Ordered:</h3>
     <% @order_items.each do |order_item| %>
       <div class="order-item-detail">
         <strong><%= order_item.item.name %></strong> - <span class="order-item-price">₹<%= order_item.item.price %></span>
